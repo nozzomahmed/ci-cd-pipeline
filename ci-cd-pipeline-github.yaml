@@ -1,0 +1,455 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Template to prepare CI/CD pipeline with github as code storage to be able to
+  deploy itself and other template as a Cloudformation stack.
+
+
+##############################
+#
+# Parameters
+#
+##############################
+
+Parameters:
+
+  GithubUserName:
+    Description: >
+      Name of the Github user who is owner of the repositories.
+    Type: String
+    Default: bigb123
+
+  GithubOAuthToken:
+    Description: >
+      OAuth token that grants access to repositories.
+    Type: String
+
+  GithubPipelineRepositoryName:
+    Description: >
+      Name of the repository that has this template.
+    Type: String
+    Default: aws-ci-cd-pipeline-github
+
+  GithubActualRepositoryName:
+    Description: >
+      Name of the actual repository that will be deployed on Cloudformation.
+    Type: String
+    Default: aws-kubernetes
+
+  ActualStackName:
+    Description: Name of the actual Cloudformation stack that has to be deployed.
+    Type: String
+    Default: kubernetes-stack
+
+  ArtifactsS3BucketName:
+    Description: Name of S3 bucket that will keep CodePipeline Artifacts
+    Type: String
+    Default: pipeline-artifacts-bucket-github-integration
+
+
+##############################
+#
+# Resources
+#
+##############################
+
+Resources:
+
+
+  ###
+  #
+  # Roles
+  #
+  ###
+
+  # Role for codepipeline execution
+  PipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Pipeline_role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess # Access to bucket with artifacts
+      Policies:
+        -
+          PolicyName: Pipeline_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - codepipeline:StartPipelineExecution
+                Resource:
+                  - arn:aws:codepipeline:*
+              -
+                Effect: Allow # Without this permiission stage can't check if it has to create new stack or update existing
+                Action:
+                  - cloudformation:DescribeStacks
+                Resource:
+                  - arn:aws:cloudformation:*
+      AssumeRolePolicyDocument: # This will allow codepipeline to provide changes to other resources
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+
+  # Role for Pipeline stage to be able to manipulate resources
+  PipelineResourceManipulationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Pipeline_resource_manipulation_role
+      Policies:
+        -
+          PolicyName: Pipeline_resource_manipulation_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+            - Action:
+              - iam:PassRole
+              Resource: "*"
+              Effect: Allow
+              Condition:
+                StringEqualsIfExists:
+                  iam:PassedToService:
+                  - cloudformation.amazonaws.com
+                  - elasticbeanstalk.amazonaws.com
+                  - ec2.amazonaws.com
+                  - ecs-tasks.amazonaws.com
+            - Action:
+              - codecommit:CancelUploadArchive
+              - codecommit:GetBranch
+              - codecommit:GetCommit
+              - codecommit:GetUploadArchiveStatus
+              - codecommit:UploadArchive
+              Resource: "*"
+              Effect: Allow
+            # - Action:
+            #   - codedeploy:CreateDeployment
+            #   - codedeploy:GetApplication
+            #   - codedeploy:GetApplicationRevision
+            #   - codedeploy:GetDeployment
+            #   - codedeploy:GetDeploymentConfig
+            #   - codedeploy:RegisterApplicationRevision
+            #   Resource: "*"
+            #   Effect: Allow
+            - Action:
+              - elasticbeanstalk:*
+              - ec2:*
+              - elasticloadbalancing:*
+              - autoscaling:*
+              - cloudwatch:*
+              - s3:*
+              - sns:*
+              - cloudformation:*
+              - rds:*
+              - sqs:*
+              - ecs:*
+              Resource: "*"
+              Effect: Allow
+            - Action:
+              - lambda:InvokeFunction
+              - lambda:ListFunctions
+              Resource: "*"
+              Effect: Allow
+            # - Action:
+            #   - opsworks:CreateDeployment
+            #   - opsworks:DescribeApps
+            #   - opsworks:DescribeCommands
+            #   - opsworks:DescribeDeployments
+            #   - opsworks:DescribeInstances
+            #   - opsworks:DescribeStacks
+            #   - opsworks:UpdateApp
+            #   - opsworks:UpdateStack
+            #   Resource: "*"
+            #   Effect: Allow
+            - Action:
+              - cloudformation:CreateStack
+              - cloudformation:DeleteStack
+              - cloudformation:DescribeStacks
+              - cloudformation:UpdateStack
+              - cloudformation:CreateChangeSet
+              - cloudformation:DeleteChangeSet
+              - cloudformation:DescribeChangeSet
+              - cloudformation:ExecuteChangeSet
+              - cloudformation:SetStackPolicy
+              - cloudformation:ValidateTemplate
+              Resource: "*"
+              Effect: Allow
+            # - Action:
+            #   - codebuild:BatchGetBuilds
+            #   - codebuild:StartBuild
+            #   Resource: "*"
+            #   Effect: Allow
+            # - Effect: Allow
+            #   Action:
+            #   - devicefarm:ListProjects
+            #   - devicefarm:ListDevicePools
+            #   - devicefarm:GetRun
+            #   - devicefarm:GetUpload
+            #   - devicefarm:CreateUpload
+            #   - devicefarm:ScheduleRun
+            #   Resource: "*"
+            # - Effect: Allow
+            #   Action:
+            #   - servicecatalog:ListProvisioningArtifacts
+            #   - servicecatalog:CreateProvisioningArtifact
+            #   - servicecatalog:DescribeProvisioningArtifact
+            #   - servicecatalog:DeleteProvisioningArtifact
+            #   - servicecatalog:UpdateProduct
+            #   Resource: "*"
+            # - Effect: Allow
+            #   Action:
+            #   - cloudformation:ValidateTemplate
+            #   Resource: "*"
+            # - Effect: Allow
+            #   Action:
+            #   - ecr:DescribeImages
+            #   Resource: "*"
+      AssumeRolePolicyDocument: # Lets Pipeline observe events that comes from or other resources (like CodeCommit)
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+          -
+            Effect: Allow # Pipeline role has to be able to use this role
+            Principal:
+              AWS: !GetAtt PipelineRole.Arn
+            Action:
+              - sts:AssumeRole
+
+
+  # Role to deploy CI/CD cloudformation stack. That will allow
+  # Cloudformation stack to provde necessary changes during its update.
+  CiCdPipelineCloudformationDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CI-CD_Pipeline_Cloudformation_deployment_role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess # to create/update CodeCommit repositories
+        - arn:aws:iam::aws:policy/IAMFullAccess # to create Pipeline roles
+        - arn:aws:iam::aws:policy/AWSCodePipelineFullAccess # To create Pipeline
+      AssumeRolePolicyDocument: # Allows codepipeline to execute cloudformation stack update
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action:
+              - sts:AssumeRole
+          -
+            Effect: Allow # Pipeline role has to be able to use this roles
+            Principal:
+              AWS: !GetAtt PipelineRole.Arn
+            Action:
+              - sts:AssumeRole
+
+  # Role for cloudformation to deploy stack. That will allow
+  # Cloudformation stack access necessary resources.
+  ActualPipelineCloudformationDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Actual_Pipeline_Cloudformation_deployment_role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess # to create/update CodeCommit repositories
+        - arn:aws:iam::aws:policy/IAMFullAccess # to create Pipeline roles
+        - arn:aws:iam::aws:policy/AWSCodePipelineFullAccess # To create Pipeline
+        - arn:aws:iam::aws:policy/AmazonVPCFullAccess # To create VPC
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess # To create Lambda
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator # To create new api gateway
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess # To create DynamoDB table
+      Policies:
+        -
+          PolicyName: Cloudformation_allow_CreateChangeSet_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                Resource:
+                  - !Sub 'arn:aws:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31'
+      AssumeRolePolicyDocument: # Allows codepipeline to execute cloudformation stack update
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action:
+              - sts:AssumeRole
+          -
+            Effect: Allow # Pipeline role has to be able to use this role
+            Principal:
+              AWS: !GetAtt PipelineRole.Arn
+            Action:
+              - sts:AssumeRole
+
+
+  # GithubPipelineRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     RoleName: Github_pipeline_role
+  #     ManagedPolicyArns:
+  #       - arn:aws:iam::aws:policy/AmazonS3FullAccess
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         -
+  #           Effect: Allow # Pipeline role has to be able to use this role
+  #           Principal:
+  #             AWS: !GetAtt PipelineRole.Arn
+  #           Action:
+  #             - sts:AssumeRole
+
+  ###
+  # S3 Bucket for CodePipeline artifacts
+  ###
+
+  # This bucket is required by codepipeline
+  S3BucketPipelineArtifacts:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref ArtifactsS3BucketName
+      AccessControl: Private
+
+
+  ###
+  #
+  # Pipelines
+  #
+  ###
+
+  ###
+  # CI/CD Pipeline
+  ###
+  CiCdPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: CI-CD-stack_deployment_pipeline
+      RestartExecutionOnUpdate: false # Do not restart on pipeline config update
+      RoleArn: !GetAtt PipelineRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref S3BucketPipelineArtifacts
+      Stages:
+        -
+          Name: SourceCode
+          Actions:
+            -
+              Name: ChangeDetection
+              # RoleArn: !GetAtt GithubPipelineRole.Arn
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: !Ref GithubUserName
+                Repo: !Ref GithubPipelineRepositoryName
+                Branch: master
+                OAuthToken: !Ref GithubOAuthToken
+              OutputArtifacts:
+                -
+                  Name: SourceArtifact
+              Region: us-east-1
+
+        -
+          Name: CloudformationStack
+          Actions:
+            -
+              Name: Deployment
+              RoleArn: !GetAtt PipelineResourceManipulationRole.Arn
+              InputArtifacts:
+                -
+                  Name: SourceArtifact
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: !Ref AWS::StackName
+                RoleArn: !GetAtt CiCdPipelineCloudformationDeploymentRole.Arn
+                Capabilities: CAPABILITY_NAMED_IAM
+                TemplatePath: SourceArtifact::ci-cd-pipeline-github.yaml
+              Region: us-east-1
+
+
+  ###
+  # Actual stack Pipeline
+  ###
+  # ActualStackPipeline:
+  #   Type: AWS::CodePipeline::Pipeline
+  #   Properties:
+  #     Name: Actual-stack_deployment_pipeline
+  #     RestartExecutionOnUpdate: false # Do not restart on pipeline config update
+  #     RoleArn: !GetAtt PipelineRole.Arn
+  #     ArtifactStore:
+  #       Type: S3
+  #       Location: !Ref S3BucketPipelineArtifacts
+  #     Stages:
+  #       -
+  #         Name: SourceCode
+  #         Actions:
+  #           -
+  #             Name: ChangeDetection
+  #             RoleArn: !GetAtt PipelineResourceManipulationRole.Arn
+  #             ActionTypeId:
+  #               Category: Source
+  #               Owner: AWS
+  #               Provider: CodeCommit
+  #               Version: 1
+  #             Configuration:
+  #               RepositoryName: !Ref ActualStackRepositoryName
+  #               BranchName: master
+  #             OutputArtifacts:
+  #               -
+  #                 Name: SourceArtifact
+  #             Region: us-east-1
+  #
+  #       -
+  #         Name: CloudformationStack
+  #         Actions:
+  #           -
+  #             Name: Deployment
+  #             RoleArn: !GetAtt PipelineResourceManipulationRole.Arn
+  #             InputArtifacts:
+  #               -
+  #                 Name: SourceArtifact
+  #             ActionTypeId:
+  #               Category: Deploy
+  #               Owner: AWS
+  #               Provider: CloudFormation
+  #               Version: 1
+  #             Configuration:
+  #               ActionMode: CREATE_UPDATE
+  #               StackName: !Ref ActualStackName
+  #               RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
+  #               Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
+  #               TemplatePath: SourceArtifact::Actual_stack.yaml
+  #             Region: us-east-1
+
+
+
+
+##############################
+#
+# Outputs
+#
+##############################
