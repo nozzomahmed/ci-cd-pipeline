@@ -257,6 +257,8 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
         - arn:aws:iam::aws:policy/SecretsManagerReadWrite # Access github token
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
       Policies:
         -
           PolicyName: Cloudformation_allow_CreateChangeSet_policy
