@@ -28,9 +28,19 @@ Parameters:
       Name of the repository that has this template.
     Type: String
 
-  GithubActualRepositoryName:
+  GithubPipelineTemplateName:
+    Description: >
+      Name of this template file.
+    Type: String
+
+  GithubActualStackRepositoryName:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
+    Type: String
+
+  GithubActualStackTemplateName:
+    Description: >
+      Name of the template file of actual stack.
     Type: String
 
   ActualStackName:
@@ -295,22 +305,6 @@ Resources:
               - sts:AssumeRole
 
 
-  # GithubPipelineRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     RoleName: Github_pipeline_role
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/AmazonS3FullAccess
-  #     AssumeRolePolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         -
-  #           Effect: Allow # Pipeline role has to be able to use this role
-  #           Principal:
-  #             AWS: !GetAtt PipelineRole.Arn
-  #           Action:
-  #             - sts:AssumeRole
-
   ###
   # S3 Bucket for CodePipeline artifacts
   ###
@@ -347,7 +341,6 @@ Resources:
           Actions:
             -
               Name: ChangeDetection
-              # RoleArn: !GetAtt GithubPipelineRole.Arn
               ActionTypeId:
                 Category: Source
                 Owner: ThirdParty
@@ -382,7 +375,7 @@ Resources:
                 StackName: !Ref AWS::StackName
                 RoleArn: !GetAtt CiCdPipelineCloudformationDeploymentRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
-                TemplatePath: SourceArtifact::ci-cd-pipeline-github.yaml
+                TemplatePath: !Sub SourceArtifact::${GithubPipelineTemplateName}
               Region: us-east-1
 
 
@@ -403,16 +396,18 @@ Resources:
   #         Name: SourceCode
   #         Actions:
   #           -
-  #             Name: ChangeDetection
-  #             RoleArn: !GetAtt PipelineResourceManipulationRole.Arn
-  #             ActionTypeId:
-  #               Category: Source
-  #               Owner: AWS
-  #               Provider: CodeCommit
-  #               Version: 1
-  #             Configuration:
-  #               RepositoryName: !Ref ActualStackRepositoryName
-  #               BranchName: master
+  #             -
+  #               Name: ChangeDetection
+  #               ActionTypeId:
+  #                 Category: Source
+  #                 Owner: ThirdParty
+  #                 Provider: GitHub
+  #                 Version: 1
+  #               Configuration:
+  #                 Owner: !Ref GithubUserName
+  #                 Repo: !Ref GithubPipelineRepositoryName
+  #                 Branch: master
+  #                 OAuthToken: !Ref GithubOAuthToken
   #             OutputArtifacts:
   #               -
   #                 Name: SourceArtifact
@@ -437,7 +432,7 @@ Resources:
   #               StackName: !Ref ActualStackName
   #               RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
   #               Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
-  #               TemplatePath: SourceArtifact::Actual_stack.yaml
+  #               TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
   #             Region: us-east-1
 
 

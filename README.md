@@ -26,7 +26,9 @@ You can use template below to fill the form:
   "GithubUserName": "",
   "GithubOAuthToken": "",
   "GithubPipelineRepositoryName": "",
-  "GithubActualRepositoryName": "",
+  "GithubPipelineTemplateName": "",
+  "GithubActualStackRepositoryName": "",
+  "GithubActualStackTemplateName": "",
   "ActualStackName": "",
   "ArtifactsS3BucketName": ""
 }
