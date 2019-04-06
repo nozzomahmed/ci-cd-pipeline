@@ -323,6 +323,12 @@ Resources:
       AccessControl: Private
 
 
+  RemovemeS3BucketPipelineArtifacts:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: removemeassoonaspossibletestonly
+      AccessControl: Private
+
   ###
   #
   # Pipelines
