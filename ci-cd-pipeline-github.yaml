@@ -356,7 +356,8 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubPipelineRepositoryName
                 Branch: master
-                OAuthToken: {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}} # !Ref GithubOAuthToken
+                OAuthToken: '{{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}'
+                # !Ref GithubOAuthToken
               OutputArtifacts:
                 -
                   Name: SourceArtifact
@@ -412,7 +413,8 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}} # !Ref GithubOAuthToken
+                OAuthToken: '{{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}'
+                # !Ref GithubOAuthToken
               OutputArtifacts:
                 -
                   Name: SourceArtifact
