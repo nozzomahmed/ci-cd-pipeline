@@ -291,7 +291,7 @@ Resources:
             Action: ec2:DescribeImages
             Resource: "*"
       Roles:
-        - !Ref ActualPipelineCloudformationDeploymentRole
+        - !Ref PipelineResourceManipulationRole
 
   # Role for cloudformation to deploy stack. That will allow
   # Cloudformation stack access necessary resources.
