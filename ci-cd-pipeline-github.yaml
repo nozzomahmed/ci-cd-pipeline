@@ -17,39 +17,47 @@ Parameters:
     Description: >
       Name of the Github user who is owner of the repositories.
     Type: String
+    Default: bigb123
 
   GithubOAuthToken:
     Description: >
       OAuth token that grants access to Github repositories.
     Type: String
+    Default:
 
   GithubPipelineRepositoryName:
     Description: >
       Name of the repository that has this template.
     Type: String
+    Default: aws-ci-cd-pipeline-github
 
   GithubPipelineTemplateName:
     Description: >
       Name of this template file.
     Type: String
+    Default: ci-cd-pipeline-github.yaml
 
   GithubActualStackRepositoryName:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
     Type: String
+    Default: aws-kubernetes
 
   GithubActualStackTemplateName:
     Description: >
       Name of the template file of actual stack.
     Type: String
+    Default: eks-template.yaml
 
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
+    Default: kubernetes-stack
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
+    Default: pipeline-artifacts-bucket-github-integration
 
 
 ##############################
