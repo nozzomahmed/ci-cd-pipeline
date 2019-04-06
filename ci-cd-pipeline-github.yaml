@@ -407,9 +407,9 @@ Resources:
                   Branch: master
                   OAuthToken: !Ref GithubOAuthToken
                 OutputArtifacts:
-                -
-                  Name: SourceArtifact
-              Region: us-east-1
+                  -
+                    Name: SourceArtifact
+                Region: us-east-1
 
         -
           Name: CloudformationStack
