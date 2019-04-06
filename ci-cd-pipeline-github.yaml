@@ -339,20 +339,20 @@ Resources:
           Actions:
             -
               Name: ChangeDetection
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
-                Version: 1
-              Configuration:
-                Owner: !Ref GithubUserName
-                Repo: !Ref GithubActualStackRepositoryName
-                Branch: master
-                OAuthToken: !Ref GithubOAuthToken
-              OutputArtifacts:
-                -
-                  Name: SourceArtifact
-              Region: us-east-1
+          ActionTypeId:
+            Category: Source
+            Owner: ThirdParty
+            Provider: GitHub
+            Version: 1
+          Configuration:
+            Owner: !Ref GithubUserName
+            Repo: !Ref GithubActualStackRepositoryName
+            Branch: master
+            OAuthToken: !Ref GithubOAuthToken
+          OutputArtifacts:
+            -
+              Name: SourceArtifact
+          Region: us-east-1
 
         -
           Name: CloudformationStack
@@ -363,18 +363,18 @@ Resources:
               InputArtifacts:
                 -
                   Name: SourceArtifact
-                  ActionTypeId:
-                    Category: Deploy
-                    Owner: AWS
-                    Provider: CloudFormation
-                    Version: 1
-                  Configuration:
-                    ActionMode: CREATE_UPDATE
-                    StackName: !Ref AWS::StackName
-                    RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
-                    Capabilities: CAPABILITY_NAMED_IAM
-                    TemplatePath: !Sub SourceArtifact::${GithubPipelineTemplateName}
-                  Region: us-east-1
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: !Ref AWS::StackName
+                RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
+                Capabilities: CAPABILITY_NAMED_IAM
+                TemplatePath: !Sub SourceArtifact::${GithubPipelineTemplateName}
+              Region: us-east-1
 
 
   ###
@@ -395,20 +395,20 @@ Resources:
           Actions:
             -
               Name: ChangeDetection
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
-                Version: 1
-              Configuration:
-                Owner: !Ref GithubUserName
-                Repo: !Ref GithubPipelineRepositoryName
-                Branch: master
-                OAuthToken: !Ref GithubOAuthToken
-              OutputArtifacts:
-                -
-                  Name: SourceArtifact
-              Region: us-east-1
+          ActionTypeId:
+            Category: Source
+            Owner: ThirdParty
+            Provider: GitHub
+            Version: 1
+          Configuration:
+            Owner: !Ref GithubUserName
+            Repo: !Ref GithubPipelineRepositoryName
+            Branch: master
+            OAuthToken: !Ref GithubOAuthToken
+          OutputArtifacts:
+            -
+              Name: SourceArtifact
+          Region: us-east-1
 
         -
           Name: CloudformationStack
@@ -419,18 +419,18 @@ Resources:
               InputArtifacts:
                 -
                   Name: SourceArtifact
-                  ActionTypeId:
-                    Category: Deploy
-                    Owner: AWS
-                    Provider: CloudFormation
-                    Version: 1
-                  Configuration:
-                    ActionMode: CREATE_UPDATE
-                    StackName: !Ref ActualStackName
-                    RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
-                    Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
-                    TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
-                  Region: us-east-1
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: !Ref ActualStackName
+                RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
+                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
+                TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
+              Region: us-east-1
 
 
 
