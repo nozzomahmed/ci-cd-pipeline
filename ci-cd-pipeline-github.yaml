@@ -360,9 +360,9 @@ Resources:
                 Version: 1
               Configuration:
                 Owner: !Ref GithubUserName
-                Repo: !Ref GithubActualStackRepositoryName
+                Repo: !Ref GithubPipelineRepositoryName
                 Branch: master
-                OAuthToken: !Ref GithubOAuthToken
+                OAuthToken: !Ref GithubOAuthToken # {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}
               OutputArtifacts:
                 -
                   Name: SourceArtifact
@@ -416,9 +416,9 @@ Resources:
                 Version: 1
               Configuration:
                 Owner: !Ref GithubUserName
-                Repo: !Ref GithubPipelineRepositoryName
+                Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: !Ref GithubOAuthToken
+                OAuthToken: !Ref GithubOAuthToken # {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}
               OutputArtifacts:
                 -
                   Name: SourceArtifact
