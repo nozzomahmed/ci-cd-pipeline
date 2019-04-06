@@ -22,10 +22,12 @@ Step by step solution is presented below.
 
 You can use template below to fill the form:
 ```
-{"GithubUserName": ""},
-{"GithubOAuthToken": ""},
-{"GithubPipelineRepositoryName": ""},
-{"GithubActualRepositoryName": ""},
-{"ActualStackName": ""},
-{"ArtifactsS3BucketName": ""}
+{
+  "GithubUserName": "",
+  "GithubOAuthToken": "",
+  "GithubPipelineRepositoryName": "",
+  "GithubActualRepositoryName": "",
+  "ActualStackName": "",
+  "ArtifactsS3BucketName": ""
+}
 ```
