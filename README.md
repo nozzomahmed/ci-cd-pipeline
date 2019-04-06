@@ -11,13 +11,13 @@ Step by step solution is presented below.
 
 # Overriding Cloudformation parameters in CodePipeline
 
-#. Open CodePipeline console and edit it.
+1. Open CodePipeline console and edit it.
   ![Edit CodePipeline](img/1.png)
-#. Edit Cloudformation deployment stage.
+1. Edit Cloudformation deployment stage.
   ![Edit Cloudformation stage](img/2.png)
-#. Edit Deployment action.
+1. Edit Deployment action.
   ![Edit Deployment action](img/3.png)
-#. Expand "Advanced" options and provide overrides for Cloudformation parameters.
+1. Expand "Advanced" options and provide overrides for Cloudformation parameters.
   ![Provide overrides for Cloudformation parameters](img/4.png)
 
 You can use template below to fill the form:
