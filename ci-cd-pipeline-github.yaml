@@ -231,7 +231,7 @@ Resources:
   CloudformatonDeploymentAdditionalPolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: CloudformatonDeploymentAdditionalPolicy
+      PolicyName: cloudformaton_deployment_additional_policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
