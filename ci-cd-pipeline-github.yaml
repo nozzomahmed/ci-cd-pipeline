@@ -119,22 +119,6 @@ Resources:
             Action:
               - sts:AssumeRole
 
-  # Policy that is being used with ec2 images.
-  CloudformatonDeploymentAdditionalPolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: CloudformatonDeploymentAdditionalPolicy
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          -
-            Effect: Allow
-            Action: ec2:DescribeImages
-            Resource: "*"
-      Roles:
-        - !Ref PipelineResourceManipulationRole
-        - !Ref CiCdPipelineCloudformationDeploymentRole
-
   # Role for Pipeline stage to be able to manipulate resources
   PipelineResourceManipulationRole:
     Type: AWS::IAM::Role
