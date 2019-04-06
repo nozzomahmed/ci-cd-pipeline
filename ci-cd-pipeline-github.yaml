@@ -240,6 +240,8 @@ Resources:
             Action:
               - ec2:DescribeImages
               - eks:CreateCluster
+              - eks:DeleteCluster
+              - eks:DescribeCluster
             Resource: "*"
       Roles:
         - !Ref ActualPipelineCloudformationDeploymentRole
