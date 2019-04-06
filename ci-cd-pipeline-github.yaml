@@ -138,19 +138,8 @@ Resources:
                 StringEqualsIfExists:
                   iam:PassedToService:
                   - cloudformation.amazonaws.com
-                  - elasticbeanstalk.amazonaws.com
                   - ec2.amazonaws.com
-                  - ecs-tasks.amazonaws.com
             - Action:
-              - codecommit:CancelUploadArchive
-              - codecommit:GetBranch
-              - codecommit:GetCommit
-              - codecommit:GetUploadArchiveStatus
-              - codecommit:UploadArchive
-              Resource: "*"
-              Effect: Allow
-            - Action:
-              - elasticbeanstalk:*
               - ec2:*
               - elasticloadbalancing:*
               - autoscaling:*
@@ -160,12 +149,6 @@ Resources:
               - cloudformation:*
               - rds:*
               - sqs:*
-              - ecs:*
-              Resource: "*"
-              Effect: Allow
-            - Action:
-              - lambda:InvokeFunction
-              - lambda:ListFunctions
               Resource: "*"
               Effect: Allow
             - Action:
@@ -198,6 +181,22 @@ Resources:
             Action:
               - sts:AssumeRole
 
+  # Policy that supports role with minimal permissions
+  CiCdPipelineCloudformationDeploymentPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ci-cd_pipeline_cloudformation_deployment_policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+            Resource: "*"
+      Roles:
+        - !Ref CiCdPipelineCloudformationDeploymentRole
 
   # Role to deploy CI/CD cloudformation stack. That will allow
   # Cloudformation stack to provde necessary changes during its update.
@@ -206,10 +205,8 @@ Resources:
     Properties:
       RoleName: CI-CD_Pipeline_Cloudformation_deployment_role
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess # to create/update CodeCommit repositories
         - arn:aws:iam::aws:policy/IAMFullAccess # to create Pipeline roles
         - arn:aws:iam::aws:policy/AWSCodePipelineFullAccess # To create Pipeline
-        - arn:aws:iam::aws:policy/SecretsManagerReadWrite # Access github token
       AssumeRolePolicyDocument: # Allows codepipeline to execute cloudformation stack update
         Version: 2012-10-17
         Statement:
@@ -227,11 +224,11 @@ Resources:
             Action:
               - sts:AssumeRole
 
-  # Policy that is being used with ec2 images.
-  CloudformatonDeploymentAdditionalPolicy:
+  # Policy that is being used with Cloudformation deployment.
+  ActualPipelineCloudformationDeploymentPolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: cloudformaton_deployment_additional_policy
+      PolicyName: actual_pipeline_cloudformation_deployment_policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
