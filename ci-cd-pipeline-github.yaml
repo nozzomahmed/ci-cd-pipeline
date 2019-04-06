@@ -133,6 +133,7 @@ Resources:
             Resource: "*"
       Roles:
         - !Ref PipelineResourceManipulationRole
+        - !Ref CiCdPipelineCloudformationDeploymentRole
 
   # Role for Pipeline stage to be able to manipulate resources
   PipelineResourceManipulationRole:
