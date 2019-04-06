@@ -7,3 +7,5 @@ order to make it work.
 
 Make sure to update default values in the parameters to make the stack
 deployable non-interactively.
+
+You have to create SecretsManager record to store Github token as well.

@@ -19,11 +19,19 @@ Parameters:
     Type: String
     Default: bigb123
 
-  # GithubOAuthToken:
-  #   Description: >
-  #     OAuth token that grants access to Github repositories.
-  #   Type: String
-  #   Default:
+  # Create record in AWS SecretsManager to store github token and provide
+  # details below.
+  GithubSecretName:
+    Description: >
+      Name of the secret that holds Github token.
+    Type: String
+    Default: GithubOAuthTokenSecret
+
+  GithubSecretKey:
+    Description: >
+      Key of the secret that holds Github token value.
+    Type: String
+    Default: Token
 
   GithubPipelineRepositoryName:
     Description: >
@@ -358,8 +366,7 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubPipelineRepositoryName
                 Branch: master
-                OAuthToken: '{{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}'
-                # !Ref GithubOAuthToken
+                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
               OutputArtifacts:
                 -
                   Name: SourceArtifact
@@ -415,8 +422,7 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: '{{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}'
-                # !Ref GithubOAuthToken
+                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
               OutputArtifacts:
                 -
                   Name: SourceArtifact
