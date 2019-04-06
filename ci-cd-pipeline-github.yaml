@@ -339,20 +339,20 @@ Resources:
           Actions:
             -
               Name: ChangeDetection
-          ActionTypeId:
-            Category: Source
-            Owner: ThirdParty
-            Provider: GitHub
-            Version: 1
-          Configuration:
-            Owner: !Ref GithubUserName
-            Repo: !Ref GithubActualStackRepositoryName
-            Branch: master
-            OAuthToken: !Ref GithubOAuthToken
-          OutputArtifacts:
-            -
-              Name: SourceArtifact
-          Region: us-east-1
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: !Ref GithubUserName
+                Repo: !Ref GithubActualStackRepositoryName
+                Branch: master
+                OAuthToken: !Ref GithubOAuthToken
+              OutputArtifacts:
+                -
+                  Name: SourceArtifact
+              Region: us-east-1
 
         -
           Name: CloudformationStack
@@ -395,20 +395,20 @@ Resources:
           Actions:
             -
               Name: ChangeDetection
-          ActionTypeId:
-            Category: Source
-            Owner: ThirdParty
-            Provider: GitHub
-            Version: 1
-          Configuration:
-            Owner: !Ref GithubUserName
-            Repo: !Ref GithubPipelineRepositoryName
-            Branch: master
-            OAuthToken: !Ref GithubOAuthToken
-          OutputArtifacts:
-            -
-              Name: SourceArtifact
-          Region: us-east-1
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: !Ref GithubUserName
+                Repo: !Ref GithubPipelineRepositoryName
+                Branch: master
+                OAuthToken: !Ref GithubOAuthToken
+              OutputArtifacts:
+                -
+                  Name: SourceArtifact
+              Region: us-east-1
 
         -
           Name: CloudformationStack
