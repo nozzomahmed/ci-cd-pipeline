@@ -21,7 +21,7 @@ Parameters:
 
   GithubOAuthToken:
     Description: >
-      OAuth token that grants access to repositories.
+      OAuth token that grants access to Github repositories.
     Type: String
 
   GithubPipelineRepositoryName:
