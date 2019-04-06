@@ -19,11 +19,11 @@ Parameters:
     Type: String
     Default: bigb123
 
-  GithubOAuthToken:
-    Description: >
-      OAuth token that grants access to Github repositories.
-    Type: String
-    Default:
+  # GithubOAuthToken:
+  #   Description: >
+  #     OAuth token that grants access to Github repositories.
+  #   Type: String
+  #   Default:
 
   GithubPipelineRepositoryName:
     Description: >
@@ -57,7 +57,7 @@ Parameters:
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: pipeline-artifacts-bucket-github-integration
+    Default: pipeline-artifacts-bucket-github-integration2
 
 
 ##############################
@@ -323,12 +323,6 @@ Resources:
       AccessControl: Private
 
 
-  RemovemeS3BucketPipelineArtifacts:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: removemeassoonaspossibletestonly
-      AccessControl: Private
-
   ###
   #
   # Pipelines
@@ -362,7 +356,7 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubPipelineRepositoryName
                 Branch: master
-                OAuthToken: !Ref GithubOAuthToken # {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}
+                OAuthToken: {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}} # !Ref GithubOAuthToken
               OutputArtifacts:
                 -
                   Name: SourceArtifact
@@ -418,7 +412,7 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: !Ref GithubOAuthToken # {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}}
+                OAuthToken: {{resolve:secretsmanager:GithubOAuthTokenSecret:SecretString:Token}} # !Ref GithubOAuthToken
               OutputArtifacts:
                 -
                   Name: SourceArtifact
