@@ -252,6 +252,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess # to create/update CodeCommit repositories
         - arn:aws:iam::aws:policy/IAMFullAccess # to create Pipeline roles
         - arn:aws:iam::aws:policy/AWSCodePipelineFullAccess # To create Pipeline
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite # Access github token
       AssumeRolePolicyDocument: # Allows codepipeline to execute cloudformation stack update
         Version: 2012-10-17
         Statement:
@@ -281,6 +282,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonVPCFullAccess # To create VPC
         - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite # Access github token
       Policies:
         -
           PolicyName: Cloudformation_allow_CreateChangeSet_policy
