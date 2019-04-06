@@ -17,7 +17,6 @@ Parameters:
     Description: >
       Name of the Github user who is owner of the repositories.
     Type: String
-    Default: bigb123
 
   GithubOAuthToken:
     Description: >
