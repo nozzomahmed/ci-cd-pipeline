@@ -227,6 +227,23 @@ Resources:
             Action:
               - sts:AssumeRole
 
+  # Policy that is being used with ec2 images.
+  CloudformatonDeploymentAdditionalPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CloudformatonDeploymentAdditionalPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - ec2:DescribeImages
+              - eks:CreateCluster
+            Resource: "*"
+      Roles:
+        - !Ref ActualPipelineCloudformationDeploymentRole
+
   # Role for cloudformation to deploy stack. That will allow
   # Cloudformation stack access necessary resources.
   ActualPipelineCloudformationDeploymentRole:
