@@ -420,18 +420,18 @@ Resources:
               InputArtifacts:
                 -
                   Name: SourceArtifact
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: 1
-              Configuration:
-                ActionMode: CREATE_UPDATE
-                StackName: !Ref ActualStackName
-                RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
-                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
-                TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
-              Region: us-east-1
+                  ActionTypeId:
+                    Category: Deploy
+                    Owner: AWS
+                    Provider: CloudFormation
+                    Version: 1
+                  Configuration:
+                    ActionMode: CREATE_UPDATE
+                    StackName: !Ref ActualStackName
+                    RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
+                    Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
+                    TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
+                  Region: us-east-1
 
 
 
