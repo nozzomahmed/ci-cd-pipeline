@@ -282,7 +282,6 @@ Resources:
   CloudformatonDeploymentAdditionalPolicy:
     Type: AWS::IAM::Policy
     Properties:
-      Description: Additional access to resources when deploying Cloudformation.
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
