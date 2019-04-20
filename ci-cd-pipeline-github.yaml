@@ -49,13 +49,13 @@ Parameters:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
     Type: String
-    Default: aws-kubernetes
+    Default: aws-kubernetes-wordpress
 
   GithubActualStackTemplateName:
     Description: >
       Name of the template file of actual stack.
     Type: String
-    Default: eks-template.yaml
+    Default: eks-wordpress.yaml
 
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
