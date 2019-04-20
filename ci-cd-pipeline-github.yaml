@@ -182,10 +182,10 @@ Resources:
               - sts:AssumeRole
 
   # Policy that supports role with minimal permissions
-  CiCdPipelineCloudformationDeploymentPolicy:
+  SecretAccessPolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: ci-cd_pipeline_cloudformation_deployment_policy
+      PolicyName: secret_access_policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -197,6 +197,117 @@ Resources:
             Resource: "*"
       Roles:
         - !Ref CiCdPipelineCloudformationDeploymentRole
+        - !Ref ActualPipelineCloudformationDeploymentRole
+
+  DBAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DB_access_policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - rds:StartDBCluster
+              - rds:DescribeDBInstanceAutomatedBackups
+              - rds:DeleteGlobalCluster
+              - rds:RemoveRoleFromDBCluster
+              - rds:RestoreDBInstanceFromS3
+              - rds:DescribeGlobalClusters
+              - rds:ResetDBParameterGroup
+              - rds:DescribeEngineDefaultParameters
+              - rds:CreateGlobalCluster
+              - rds:PurchaseReservedDBInstancesOffering
+              - rds:ModifyDBParameterGroup
+              - rds:AddSourceIdentifierToSubscription
+              - rds:DownloadDBLogFilePortion
+              - rds:CopyDBParameterGroup
+              - rds:DescribeSourceRegions
+              - rds:AddRoleToDBCluster
+              - rds:ModifyDBInstance
+              - rds:ModifyDBClusterParameterGroup
+              - rds:ModifyDBClusterSnapshotAttribute
+              - rds:DeleteDBInstance
+              - rds:CopyDBClusterParameterGroup
+              - rds:CreateDBClusterEndpoint
+              - rds:StopDBCluster
+              - rds:DescribeDBSnapshots
+              - rds:DeleteDBSnapshot
+              - rds:DescribeDBSecurityGroups
+              - rds:DeleteDBInstanceAutomatedBackup
+              - rds:RemoveFromGlobalCluster
+              - rds:PromoteReadReplica
+              - rds:StartDBInstance
+              - rds:RestoreDBClusterFromS3
+              - rds:DeleteDBSubnetGroup
+              - rds:DescribeReservedDBInstances
+              - rds:DescribeValidDBInstanceModifications
+              - rds:RestoreDBInstanceFromDBSnapshot
+              - rds:DeleteDBSecurityGroup
+              - rds:DescribeOrderableDBInstanceOptions
+              - rds:ModifyDBClusterEndpoint
+              - rds:ModifyDBCluster
+              - rds:DeleteDBParameterGroup
+              - rds:DescribeCertificates
+              - rds:ModifyDBSnapshotAttribute
+              - rds:PromoteReadReplicaDBCluster
+              - rds:DescribeOptionGroups
+              - rds:ModifyOptionGroup
+              - rds:RestoreDBClusterFromSnapshot
+              - rds:DescribeDBEngineVersions
+              - rds:DescribeDBSubnetGroups
+              - rds:DescribePendingMaintenanceActions
+              - rds:DescribeDBParameterGroups
+              - rds:DescribeDBClusterBacktracks
+              - rds:DescribeReservedDBInstancesOfferings
+              - rds:DeleteOptionGroup
+              - rds:FailoverDBCluster
+              - rds:DeleteEventSubscription
+              - rds:RemoveSourceIdentifierFromSubscription
+              - rds:AddRoleToDBInstance
+              - rds:DeleteDBClusterEndpoint
+              - rds:DescribeDBInstances
+              - rds:DescribeEngineDefaultClusterParameters
+              - rds:RevokeDBSecurityGroupIngress
+              - rds:DescribeDBParameters
+              - rds:DescribeEventCategories
+              - rds:ModifyCurrentDBClusterCapacity
+              - rds:DeleteDBCluster
+              - rds:ResetDBClusterParameterGroup
+              - rds:RestoreDBClusterToPointInTime
+              - rds:DescribeEvents
+              - rds:DescribeDBClusterSnapshotAttributes
+              - rds:DescribeDBClusterParameters
+              - rds:DescribeEventSubscriptions
+              - rds:CopyDBSnapshot
+              - rds:CopyDBClusterSnapshot
+              - rds:ModifyEventSubscription
+              - rds:DescribeDBLogFiles
+              - rds:StopDBInstance
+              - rds:CopyOptionGroup
+              - rds:DescribeDBSnapshotAttributes
+              - rds:ModifyDBSnapshot
+              - rds:DeleteDBClusterSnapshot
+              - rds:ListTagsForResource
+              - rds:RebootDBInstance
+              - rds:ModifyGlobalCluster
+              - rds:DescribeDBClusterSnapshots
+              - rds:DescribeOptionGroupOptions
+              - rds:DownloadCompleteDBLogFile
+              - rds:DescribeDBClusterEndpoints
+              - rds:DeleteDBClusterParameterGroup
+              - rds:ApplyPendingMaintenanceAction
+              - rds:BacktrackDBCluster
+              - rds:DescribeAccountAttributes
+              - rds:DescribeDBClusters
+              - rds:RemoveRoleFromDBInstance
+              - rds:DescribeDBClusterParameterGroups
+              - rds:ModifyDBSubnetGroup
+              - rds:RestoreDBInstanceToPointInTime
+            Resource: "*"
+      Roles:
+        - !Ref ActualPipelineCloudformationDeploymentRole
 
   # Role to deploy CI/CD cloudformation stack. That will allow
   # Cloudformation stack to provde necessary changes during its update.
@@ -255,7 +366,6 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonVPCFullAccess # To create VPC
         - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
-        - arn:aws:iam::aws:policy/SecretsManagerReadWrite # Access github token
       Policies:
         -
           PolicyName: Cloudformation_allow_CreateChangeSet_policy
