@@ -450,4 +450,4 @@ Outputs:
       Name of the role that is being used to deploy second stack.
     Value: !Ref ActualPipelineCloudformationDeploymentRole
     Export:
-          Name: export-deployment-role
+          Name: stack-deployment-role
