@@ -244,7 +244,7 @@ Resources:
   ActualPipelineCloudformationDeploymentPolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: actual_pipeline_cloudformation_deployment_policy
+      PolicyName: Actual_Pipeline_Cloudformation_deployment_policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -299,6 +299,29 @@ Resources:
               AWS: !GetAtt PipelineRole.Arn
             Action:
               - sts:AssumeRole
+          -
+            Effect: Allow # Allow cli user to use role that has been used to create EKS stack
+            Principal:
+              AWS: !GetAtt EKSAccessUser.Arn
+            Action:
+              - sts:AssumeRole
+
+  ###
+  # User that can manipulate Kubernetes via cli
+  ###
+  EKSAccessUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: eks-access
+      Policies:
+        -
+          PolicyName: Switch_to_EKS_cluster_master_policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              Effect: Allow
+              Action: sts:AssumeRole
+              Resource: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
 
 
   ###
@@ -438,3 +461,11 @@ Resources:
 # Outputs
 #
 ##############################
+
+Outputs:
+  EKSAccessUserName:
+    Description: >
+      Name of the user that has administrative access to EKS cluster. Use this
+      name to find the user among AMI users and use its CLI credentials to
+      create kubeconfig file.
+    Value: !Ref EKSAccessUser
