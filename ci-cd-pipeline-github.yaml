@@ -209,55 +209,7 @@ Resources:
           -
             Effect: Allow
             Action:
-              - rds:DescribeDBInstanceAutomatedBackups
-              - rds:DescribeGlobalClusters
-              - rds:DescribeEngineDefaultParameters
-              - rds:CreateOptionGroup
-              - rds:CreateDBSubnetGroup
-              - rds:DownloadDBLogFilePortion
-              - rds:DescribeSourceRegions
-              - rds:CreateDBParameterGroup
-              - rds:DescribeDBSnapshots
-              - rds:DescribeDBSecurityGroups
-              - rds:DescribeReservedDBInstances
-              - rds:CreateDBSnapshot
-              - rds:DescribeValidDBInstanceModifications
-              - rds:DescribeOrderableDBInstanceOptions
-              - rds:CreateDBClusterSnapshot
-              - rds:DescribeCertificates
-              - rds:CreateDBClusterParameterGroup
-              - rds:RemoveTagsFromResource
-              - rds:DescribeOptionGroups
-              - rds:CreateEventSubscription
-              - rds:DescribeDBEngineVersions
-              - rds:DescribeDBSubnetGroups
-              - rds:DescribePendingMaintenanceActions
-              - rds:DescribeDBParameterGroups
-              - rds:DescribeDBClusterBacktracks
-              - rds:DescribeReservedDBInstancesOfferings
-              - rds:CreateDBInstance
-              - rds:DescribeDBInstances
-              - rds:DescribeEngineDefaultClusterParameters
-              - rds:DescribeDBParameters
-              - rds:DescribeEventCategories
-              - rds:DescribeEvents
-              - rds:AddTagsToResource
-              - rds:DescribeDBClusterSnapshotAttributes
-              - rds:DescribeDBClusterParameters
-              - rds:DescribeEventSubscriptions
-              - rds:DescribeDBLogFiles
-              - rds:DescribeDBSnapshotAttributes
-              - rds:ListTagsForResource
-              - rds:CreateDBCluster
-              - rds:CreateDBSecurityGroup
-              - rds:DescribeDBClusterSnapshots
-              - rds:DescribeOptionGroupOptions
-              - rds:DownloadCompleteDBLogFile
-              - rds:DescribeDBClusterEndpoints
-              - rds:CreateDBInstanceReadReplica
-              - rds:DescribeAccountAttributes
-              - rds:DescribeDBClusters
-              - rds:DescribeDBClusterParameterGroups
+              - rds:*
             Resource: "*"
       Roles:
         - !Ref ActualPipelineCloudformationDeploymentRole
