@@ -209,104 +209,55 @@ Resources:
           -
             Effect: Allow
             Action:
-              - rds:StartDBCluster
-              - rds:DeleteGlobalCluster
-              - rds:RestoreDBInstanceFromS3
-              - rds:ResetDBParameterGroup
+              - rds:DescribeDBInstanceAutomatedBackups
               - rds:DescribeGlobalClusters
-              - rds:PurchaseReservedDBInstancesOffering
-              - rds:ModifyDBParameterGroup
+              - rds:DescribeEngineDefaultParameters
+              - rds:CreateOptionGroup
+              - rds:CreateDBSubnetGroup
               - rds:DownloadDBLogFilePortion
               - rds:DescribeSourceRegions
-              - rds:AddRoleToDBCluster
-              - rds:DeleteDBInstance
-              - rds:DeleteDBInstanceAutomatedBackup
+              - rds:CreateDBParameterGroup
+              - rds:DescribeDBSnapshots
+              - rds:DescribeDBSecurityGroups
               - rds:DescribeReservedDBInstances
-              - rds:DeleteDBSecurityGroup
+              - rds:CreateDBSnapshot
+              - rds:DescribeValidDBInstanceModifications
+              - rds:DescribeOrderableDBInstanceOptions
+              - rds:CreateDBClusterSnapshot
+              - rds:DescribeCertificates
+              - rds:CreateDBClusterParameterGroup
+              - rds:RemoveTagsFromResource
+              - rds:DescribeOptionGroups
+              - rds:CreateEventSubscription
+              - rds:DescribeDBEngineVersions
+              - rds:DescribeDBSubnetGroups
+              - rds:DescribePendingMaintenanceActions
+              - rds:DescribeDBParameterGroups
               - rds:DescribeDBClusterBacktracks
               - rds:DescribeReservedDBInstancesOfferings
-              - rds:DeleteOptionGroup
-              - rds:FailoverDBCluster
-              - rds:AddRoleToDBInstance
               - rds:CreateDBInstance
               - rds:DescribeDBInstances
               - rds:DescribeEngineDefaultClusterParameters
-              - rds:DescribeEventCategories
-              - rds:DeleteDBCluster
-              - rds:DescribeEvents
-              - rds:ModifyEventSubscription
-              - rds:DescribeDBSnapshotAttributes
-              - rds:ModifyDBSnapshot
-              - rds:DeleteDBClusterSnapshot
-              - rds:ListTagsForResource
-              - rds:CreateDBCluster
-              - rds:DeleteDBClusterParameterGroup
-              - rds:ApplyPendingMaintenanceAction
-              - rds:BacktrackDBCluster
-              - rds:RemoveRoleFromDBInstance
-              - rds:ModifyDBSubnetGroup
-              - rds:DescribeDBInstanceAutomatedBackups
-              - rds:RemoveRoleFromDBCluster
-              - rds:DescribeEngineDefaultParameters
-              - rds:CreateGlobalCluster
-              - rds:AddSourceIdentifierToSubscription
-              - rds:CopyDBParameterGroup
-              - rds:ModifyDBClusterParameterGroup
-              - rds:ModifyDBInstance
-              - rds:ModifyDBClusterSnapshotAttribute
-              - rds:CopyDBClusterParameterGroup
-              - rds:CreateDBClusterEndpoint
-              - rds:StopDBCluster
-              - rds:DescribeDBSnapshots
-              - rds:DeleteDBSnapshot
-              - rds:DescribeDBSecurityGroups
-              - rds:RemoveFromGlobalCluster
-              - rds:PromoteReadReplica
-              - rds:StartDBInstance
-              - rds:RestoreDBClusterFromS3
-              - rds:DeleteDBSubnetGroup
-              - rds:DescribeValidDBInstanceModifications
-              - rds:RestoreDBInstanceFromDBSnapshot
-              - rds:DescribeOrderableDBInstanceOptions
-              - rds:ModifyDBClusterEndpoint
-              - rds:ModifyDBCluster
-              - rds:DeleteDBParameterGroup
-              - rds:DescribeCertificates
-              - rds:ModifyDBSnapshotAttribute
-              - rds:PromoteReadReplicaDBCluster
-              - rds:DescribeOptionGroups
-              - rds:ModifyOptionGroup
-              - rds:RestoreDBClusterFromSnapshot
-              - rds:DescribeDBSubnetGroups
-              - rds:DescribeDBEngineVersions
-              - rds:DescribePendingMaintenanceActions
-              - rds:DescribeDBParameterGroups
-              - rds:DeleteEventSubscription
-              - rds:RemoveSourceIdentifierFromSubscription
-              - rds:DeleteDBClusterEndpoint
-              - rds:RevokeDBSecurityGroupIngress
               - rds:DescribeDBParameters
-              - rds:ModifyCurrentDBClusterCapacity
-              - rds:ResetDBClusterParameterGroup
-              - rds:RestoreDBClusterToPointInTime
+              - rds:DescribeEventCategories
+              - rds:DescribeEvents
+              - rds:AddTagsToResource
               - rds:DescribeDBClusterSnapshotAttributes
               - rds:DescribeDBClusterParameters
               - rds:DescribeEventSubscriptions
-              - rds:CopyDBSnapshot
-              - rds:CopyDBClusterSnapshot
               - rds:DescribeDBLogFiles
-              - rds:StopDBInstance
-              - rds:CopyOptionGroup
-              - rds:RebootDBInstance
-              - rds:ModifyGlobalCluster
+              - rds:DescribeDBSnapshotAttributes
+              - rds:ListTagsForResource
+              - rds:CreateDBCluster
+              - rds:CreateDBSecurityGroup
               - rds:DescribeDBClusterSnapshots
               - rds:DescribeOptionGroupOptions
               - rds:DownloadCompleteDBLogFile
               - rds:DescribeDBClusterEndpoints
+              - rds:CreateDBInstanceReadReplica
               - rds:DescribeAccountAttributes
               - rds:DescribeDBClusters
               - rds:DescribeDBClusterParameterGroups
-              - rds:RestoreDBInstanceToPointInTime
             Resource: "*"
       Roles:
         - !Ref ActualPipelineCloudformationDeploymentRole
