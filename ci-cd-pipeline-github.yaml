@@ -447,7 +447,7 @@ Resources:
 Outputs:
   DeploymentRole:
     Description: >
-      Name of the role that is being used to deploy second stack.
-    Value: !Ref ActualPipelineCloudformationDeploymentRole
+      ARN of the role that is being used to deploy second stack.
+    Value: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
     Export:
           Name: stack-deployment-role
