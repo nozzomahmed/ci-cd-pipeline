@@ -65,8 +65,7 @@ Parameters:
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: pipeline-artifacts-bucket-github-integration2
-
+    Default: pipeline-artifacts-bucket
 
 ##############################
 #
