@@ -17,7 +17,7 @@ Parameters:
     Description: >
       Name of the Github user who is owner of the repositories.
     Type: String
-    Default: bigb123
+    Default: nozzomahmed
 
   # Create record in AWS SecretsManager to store github token and provide
   # details below.
@@ -25,7 +25,7 @@ Parameters:
     Description: >
       Name of the secret that holds Github token.
     Type: String
-    Default: GithubOAuthTokenSecret
+    Default: ci-cd-token
 
   GithubSecretKey:
     Description: >
@@ -37,7 +37,7 @@ Parameters:
     Description: >
       Name of the repository that has this template.
     Type: String
-    Default: aws-ci-cd-pipeline-github
+    Default: ci-cd-pipeline
 
   GithubPipelineTemplateName:
     Description: >
@@ -55,12 +55,12 @@ Parameters:
     Description: >
       Name of the template file of actual stack.
     Type: String
-    Default: eks-wordpress.yaml
+    Default: wordpress-master.template
 
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
-    Default: kubernetes-stack
+    Default: wordpress
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
