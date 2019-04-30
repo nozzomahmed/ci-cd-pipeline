@@ -49,7 +49,7 @@ Parameters:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
     Type: String
-    Default: aws-kubernetes-wordpress
+    Default: Wordpress
 
   GithubActualStackTemplateName:
     Description: >
@@ -60,12 +60,12 @@ Parameters:
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
-    Default: wordpress
+    Default: Wordpress-master.yaml
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: pipeline-artifacts-bucket
+    Default: 
 
 ##############################
 #
