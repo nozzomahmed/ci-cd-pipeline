@@ -57,10 +57,10 @@ Parameters:
     Type: String
     Default: wordpress-master.template
 
-  ActualStackName:
-    Description: Name of the actual Cloudformation stack that has to be deployed.
-    Type: String
-    Default: Wordpress
+  #ActualStackName:
+   # Description: Name of the actual Cloudformation stack that has to be deployed.
+   # Type: String
+    #Default: Wordpress
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
@@ -428,7 +428,7 @@ Resources:
                 Version: 1
               Configuration:
                 ActionMode: CREATE_UPDATE
-                StackName: !Ref ActualStackName
+               # StackName: !Ref ActualStackName
                 RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
                 TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
