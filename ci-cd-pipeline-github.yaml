@@ -25,7 +25,7 @@ Parameters:
     Description: >
       Name of the secret that holds Github token.
     Type: String
-    Default: ci-cd-token
+    Default: Token
 
   GithubSecretKey:
     Description: >
@@ -60,12 +60,12 @@ Parameters:
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
-    Default: Wordpress-master.yaml
+    Default: Wordpress
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: 
+    Default: 955904468836-artifacts
 
 ##############################
 #
@@ -214,7 +214,7 @@ Resources:
         - !Ref ActualPipelineCloudformationDeploymentRole
 
   # Role to deploy CI/CD cloudformation stack. That will allow
-  # Cloudformation stack to provde necessary changes during its update.
+  # Cloudformation stack to provide necessary changes during its update.
   CiCdPipelineCloudformationDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
@@ -348,9 +348,9 @@ Resources:
                 Version: 1
               Configuration:
                 Owner: !Ref GithubUserName
-                Repo: !Ref GithubPipelineRepositoryName
+                Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
+                OAuthToken: !Sub "{{resolve:ssm:${GithubSecretKey}:1}"
               OutputArtifacts:
                 -
                   Name: SourceArtifact
@@ -406,7 +406,7 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
+                OAuthToken: !Sub "{{resolve:ssm:${GithubSecretKey}:1}"
               OutputArtifacts:
                 -
                   Name: SourceArtifact
