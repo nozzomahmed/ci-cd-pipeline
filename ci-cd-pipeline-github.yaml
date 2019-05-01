@@ -37,7 +37,7 @@ Parameters:
     Description: >
       Name of the repository that has this template.
     Type: String
-    Default: aws-ci-cd-pipeline-github
+    Default: ci-cd-pipeline
 
   GithubPipelineTemplateName:
     Description: >
@@ -49,13 +49,13 @@ Parameters:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
     Type: String
-    Default: aws-kubernetes-wordpress
+    Default: Wordpress
 
   GithubActualStackTemplateName:
     Description: >
       Name of the template file of actual stack.
     Type: String
-    Default: eks-wordpress.yaml
+    Default: wordpress-master.template
 
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
@@ -65,7 +65,7 @@ Parameters:
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: 955904468836-github-integration
+    Default: 955904468836-github-integration1
 
 
 ##############################
