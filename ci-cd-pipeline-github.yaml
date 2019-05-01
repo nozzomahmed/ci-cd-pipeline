@@ -60,7 +60,7 @@ Parameters:
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
-    Default: kubernetes-stack
+    Default: VPCstack
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
