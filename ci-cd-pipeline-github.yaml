@@ -17,7 +17,7 @@ Parameters:
     Description: >
       Name of the Github user who is owner of the repositories.
     Type: String
-    Default: nozzomahmed
+    Default: bigb123
 
   # Create record in AWS SecretsManager to store github token and provide
   # details below.
@@ -37,7 +37,7 @@ Parameters:
     Description: >
       Name of the repository that has this template.
     Type: String
-    Default: ci-cd-pipeline
+    Default: aws-ci-cd-pipeline-github
 
   GithubPipelineTemplateName:
     Description: >
@@ -49,23 +49,24 @@ Parameters:
     Description: >
       Name of the actual repository that will be deployed on Cloudformation.
     Type: String
-    Default: Wordpress
+    Default: aws-kubernetes-wordpress
 
   GithubActualStackTemplateName:
     Description: >
       Name of the template file of actual stack.
     Type: String
-    Default: wordpress-master.template
+    Default: eks-wordpress.yaml
 
   ActualStackName:
     Description: Name of the actual Cloudformation stack that has to be deployed.
     Type: String
-    Default: Wordpress
+    Default: kubernetes-stack
 
   ArtifactsS3BucketName:
     Description: Name of S3 bucket that will keep CodePipeline Artifacts
     Type: String
-    Default: 955904468836-artifacts
+    Default: pipeline-artifacts-bucket-github-integration2
+
 
 ##############################
 #
@@ -214,7 +215,7 @@ Resources:
         - !Ref ActualPipelineCloudformationDeploymentRole
 
   # Role to deploy CI/CD cloudformation stack. That will allow
-  # Cloudformation stack to provide necessary changes during its update.
+  # Cloudformation stack to provde necessary changes during its update.
   CiCdPipelineCloudformationDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
@@ -348,13 +349,13 @@ Resources:
                 Version: 1
               Configuration:
                 Owner: !Ref GithubUserName
-                Repo: !Ref GithubActualStackRepositoryName
+                Repo: !Ref GithubPipelineRepositoryName
                 Branch: master
-                OAuthToken: !Sub "{{resolve:ssm:${GithubSecretKey}:1}"
+                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
               OutputArtifacts:
                 -
                   Name: SourceArtifact
-              Region: ap-southeast-2
+              Region: us-east-1
 
         -
           Name: CloudformationStack
@@ -376,7 +377,7 @@ Resources:
                 RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM
                 TemplatePath: !Sub SourceArtifact::${GithubPipelineTemplateName}
-              Region: ap-southeast-2
+              Region: us-east-1
 
 
   ###
@@ -406,11 +407,11 @@ Resources:
                 Owner: !Ref GithubUserName
                 Repo: !Ref GithubActualStackRepositoryName
                 Branch: master
-                OAuthToken: !Sub "{{resolve:ssm:${GithubSecretKey}:1}"
+                OAuthToken: !Sub '{{resolve:secretsmanager:${GithubSecretName}:SecretString:${GithubSecretKey}}}'
               OutputArtifacts:
                 -
                   Name: SourceArtifact
-              Region: ap-southeast-2
+              Region: us-east-1
 
         -
           Name: CloudformationStack
@@ -432,7 +433,7 @@ Resources:
                 RoleArn: !GetAtt ActualPipelineCloudformationDeploymentRole.Arn
                 Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND # Needed for AWS::Serverless template usage
                 TemplatePath: !Sub SourceArtifact::${GithubActualStackTemplateName}
-              Region: ap-southeast-2
+              Region: us-east-1
 
 
 
